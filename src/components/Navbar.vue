@@ -11,8 +11,6 @@
       </ul>
     </div>
   </nav>
-  {{ name }}
-  {{ fullName }}
 </template>
 
 <script setup>

@@ -2,14 +2,32 @@ export default {
   namespaced: true,
   state() {
     return {
-      name: "First",
+      name: "",
+      password: "",
     };
   },
-  mutations: {},
-  getters: {
-    fullName(state) {
-      return state.name + "Rajput";
+  mutations: {
+    SET_NAME(state, payload) {
+      state.name = payload.name;
+    },
+    SET_PASSWORD(state, payload) {
+      state.password = payload.password;
     },
   },
-  actions: {},
+  getters: {
+    name(state) {
+      return state.name;
+    },
+    password(state) {
+      return state.password;
+    },
+  },
+  actions: {
+    updateName({ commit }, name) {
+      commit("SET_NAME", { name });
+    },
+    updatePassword({ commit }, password) {
+      commit("SET_PASSWORD", { password });
+    },
+  },
 };
