@@ -6,7 +6,7 @@
           <h3>Login</h3>
           <hr />
         </div>
-        <v-form>
+        <v-form @submit.prevent="submit">
           <v-text-field
             label="Username"
             :rules="[rules.maxLength(30), rules.required()]"
@@ -18,11 +18,16 @@
             v-model="password"
           ></v-text-field>
           <v-text-field
+            label="Email"
+            :rules="[rules.email()]"
+            v-model="email"
+          ></v-text-field>
+          <v-text-field
             label="Confirm Password"
-            :rules="[rules.maxLength(30), passwordMatch()]"
+            :rules="[rules.maxLength(30), rules.required(), passwordMatch()]"
             v-model="confirmPassword"
           ></v-text-field>
-          <v-btn type="submit" variant="tonal"> Button </v-btn>
+          <v-btn type="submit" variant="tonal" class="my-2"> Button </v-btn>
         </v-form>
       </div>
     </div>
@@ -30,8 +35,8 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
-import { useStore } from "vuex";
+import { computed, onBeforeMount, ref } from "vue";
+import { useStore, mapActions } from "vuex";
 import { useRules } from "vuetify/labs/rules";
 
 const rules = useRules();
@@ -62,5 +67,18 @@ const password = computed({
     store.dispatch("auth/updatePassword", val);
   },
 });
-const submit = () => {};
+const email = computed({
+  get() {
+    return store.getters["auth/email"];
+  },
+  set(val) {
+    store.dispatch("auth/updateEmail", val);
+  },
+});
+
+const submit = (formState) => {
+  console.log("🚀 ~ submit ~ formState:", formState);
+  store.dispatch("auth/signUp");
+};
+onBeforeMount(() => {});
 </script>

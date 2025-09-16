@@ -1,17 +1,18 @@
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+const auth = getAuth();
 export default {
   namespaced: true,
   state() {
     return {
       name: "",
       password: "",
+      email: "",
     };
   },
   mutations: {
-    SET_NAME(state, payload) {
-      state.name = payload.name;
-    },
-    SET_PASSWORD(state, payload) {
-      state.password = payload.password;
+    SET(state, payload) {
+      state[payload.key] = payload.value;
     },
   },
   getters: {
@@ -21,13 +22,31 @@ export default {
     password(state) {
       return state.password;
     },
+    email(state) {
+      return state.email;
+    },
   },
   actions: {
     updateName({ commit }, name) {
-      commit("SET_NAME", { name });
+      commit("SET", { value: name, key: "name" });
     },
     updatePassword({ commit }, password) {
-      commit("SET_PASSWORD", { password });
+      commit("SET", { value: password, key: "password" });
+    },
+    updateEmail({ commit }, email) {
+      commit("SET", { value: email, key: "email" });
+    },
+    signUp({ commit, state, dispatch }) {
+      createUserWithEmailAndPassword(auth, state.email, state.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          dispatch("user/loginUser", user, { root: true });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
+      //
     },
   },
 };

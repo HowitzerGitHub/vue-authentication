@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import "./services/firebase";
 import router from "./router/router.js";
 import store from "./store/store";
 import "vuetify/styles";
