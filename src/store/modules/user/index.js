@@ -19,6 +19,18 @@ export default {
     isLoggedIn(state) {
       return state.isLoggedIn;
     },
+    localId(state) {
+      return state.user?.reloadUserInfo?.localId;
+    },
+    accessToken(state) {
+      return state.user?.accessToken;
+    },
+    expirationTime(state) {
+      return state.user?.stsTokenManager?.expirationTime;
+    },
+    refreshToken(state) {
+      return state.user?.stsTokenManager?.refreshToken;
+    },
   },
   actions: {
     loginUser({ commit }, userDetails) {

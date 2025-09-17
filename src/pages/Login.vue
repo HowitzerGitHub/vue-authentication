@@ -8,11 +8,6 @@
         </div>
         <v-form @submit.prevent="submit">
           <v-text-field
-            label="Username"
-            :rules="[rules.maxLength(30), rules.required()]"
-            v-model="fullName"
-          ></v-text-field>
-          <v-text-field
             label="Password"
             :rules="[rules.maxLength(30), rules.required()]"
             v-model="password"
@@ -22,11 +17,7 @@
             :rules="[rules.email()]"
             v-model="email"
           ></v-text-field>
-          <v-text-field
-            label="Confirm Password"
-            :rules="[rules.maxLength(30), rules.required(), passwordMatch()]"
-            v-model="confirmPassword"
-          ></v-text-field>
+
           <v-btn type="submit" variant="tonal" class="my-2"> Button </v-btn>
         </v-form>
       </div>
@@ -35,30 +26,17 @@
 </template>
 
 <script setup>
-import { computed, onBeforeMount, ref } from "vue";
-import { useStore, mapActions } from "vuex";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 import { useRules } from "vuetify/labs/rules";
-
-const rules = useRules();
 const store = useStore();
+const rules = useRules();
 
-const confirmPassword = ref();
-
-const passwordMatch = (err) => {
-  return (v) => {
-    if (v !== password.value) return "Password does not Match";
-    return true;
-  };
+const submit = async (event) => {
+  const { valid } = await event;
+  if (!valid) return;
+  store.dispatch("auth/login");
 };
-
-const fullName = computed({
-  get() {
-    return store.getters["auth/name"];
-  },
-  set(val) {
-    store.dispatch("auth/updateName", val);
-  },
-});
 const password = computed({
   get() {
     return store.getters["auth/password"];
@@ -75,10 +53,4 @@ const email = computed({
     store.dispatch("auth/updateEmail", val);
   },
 });
-
-const submit = (formState) => {
-  console.log("🚀 ~ submit ~ formState:", formState);
-  store.dispatch("auth/signUp");
-};
-onBeforeMount(() => {});
 </script>
