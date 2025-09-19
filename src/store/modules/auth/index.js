@@ -3,6 +3,9 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "@/services/firebase";
+import { getErrorMessageFromCode } from "@/services/errorCodes";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 
 export default {
   namespaced: true,
@@ -39,27 +42,34 @@ export default {
     updateEmail({ commit }, email) {
       commit("SET", { value: email, key: "email" });
     },
-    signUp({ state, dispatch }) {
-      createUserWithEmailAndPassword(auth, state.email, state.password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          dispatch("user/loginUser", user, { root: true });
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-        });
+    async signUp({ state, dispatch }) {
+      try {
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          state.email,
+          state.password
+        );
+
+        await dispatch("user/loginUser", user, { root: true });
+      } catch (error) {
+        const errorCode = error.code;
+        toast.error(getErrorMessageFromCode(error.message));
+      }
     },
-    login({ state, dispatch }) {
-      signInWithEmailAndPassword(auth, state.email, state.password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          dispatch("user/loginUser", user, { root: true });
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-        });
+    async login({ state, dispatch }) {
+      try {
+        const { user } = await signInWithEmailAndPassword(
+          auth,
+          state.email,
+          state.password
+        );
+
+        await dispatch("user/loginUser", user, { root: true });
+      } catch (error) {
+        console.log("🚀 ~ login ~ error:", error);
+        const errorCode = error.code;
+        toast.error(getErrorMessageFromCode(error.message));
+      }
     },
   },
 };

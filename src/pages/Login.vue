@@ -18,7 +18,9 @@
             v-model="email"
           ></v-text-field>
 
-          <v-btn type="submit" variant="tonal" class="my-2"> Button </v-btn>
+          <v-btn type="submit" variant="tonal" class="my-2" :loading="loading">
+            Button
+          </v-btn>
         </v-form>
       </div>
     </div>
@@ -32,10 +34,14 @@ import { useRules } from "vuetify/labs/rules";
 const store = useStore();
 const rules = useRules();
 
+const loading = ref(false);
+
 const submit = async (event) => {
   const { valid } = await event;
   if (!valid) return;
-  store.dispatch("auth/login");
+  loading.value = true;
+  await store.dispatch("auth/login");
+  loading.value = false;
 };
 const password = computed({
   get() {

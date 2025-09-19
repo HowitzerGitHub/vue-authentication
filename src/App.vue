@@ -1,9 +1,6 @@
-<script setup>
-import Navbar from "@/components/navbar.vue";
-</script>
+<script setup></script>
 
 <template>
-  <Navbar></Navbar>
   <div class="container">
     <div class="row">
       <div class="col-md-12">

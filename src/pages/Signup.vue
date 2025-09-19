@@ -27,7 +27,9 @@
             :rules="[rules.maxLength(30), rules.required(), passwordMatch()]"
             v-model="confirmPassword"
           ></v-text-field>
-          <v-btn type="submit" variant="tonal" class="my-2"> Button </v-btn>
+          <v-btn type="submit" variant="tonal" class="my-2" :loading="loading">
+            Button
+          </v-btn>
         </v-form>
       </div>
     </div>
@@ -42,7 +44,8 @@ import { useRules } from "vuetify/labs/rules";
 const rules = useRules();
 const store = useStore();
 
-const confirmPassword = ref();
+let confirmPassword = ref();
+let loading = ref(false);
 
 const passwordMatch = () => {
   return (v) => {
@@ -81,6 +84,8 @@ const submit = async (event) => {
 
   if (!valid) return;
 
-  store.dispatch("auth/signUp");
+  loading.value = true;
+  await store.dispatch("auth/signUp");
+  loading.value = false;
 };
 </script>

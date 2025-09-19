@@ -9,6 +9,8 @@ import * as directives from "vuetify/directives";
 import { createVuetify } from "vuetify";
 import { createRulesPlugin } from "vuetify/labs/rules";
 import { vuetifyRules } from "./services/vuetifyValidations";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 
 const app = createApp(App);
 
@@ -23,5 +25,6 @@ app.use(router);
 app.use(store);
 app.use(vuetify);
 app.use(customRulesPlugin);
+app.use(Toast);
 
 app.mount("#app");
